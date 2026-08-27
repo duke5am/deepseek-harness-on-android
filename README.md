@@ -1,4 +1,4 @@
-# deepseek-harness-on-android
+# DeepSeek Harness (dsh) on Android — Termux + proot-distro + Ubuntu Setup
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![dsh](https://img.shields.io/badge/dsh-0.1.1--rc.2-4D6BFE.svg)](https://github.com/deepseek-ai/deepseek-harness)
@@ -6,9 +6,40 @@
 [![PRoot](https://img.shields.io/badge/PRoot-supported-green.svg)](https://github.com/termux/proot-distro)
 [![Ubuntu 26.04 LTS](https://img.shields.io/badge/Ubuntu-26.04%20LTS-E95420.svg)](https://ubuntu.com)
 
-> Step-by-step guide to running **DeepSeek Harness (dsh)** on an Android phone — **Termux → proot-distro → Ubuntu → Node.js/npm → dsh → environment skills**. Verified on Ubuntu 26.04 LTS "Resolute Raccoon" (aarch64) under PRoot, no root required.
+> A complete, copy-paste guide to **install** and **run DeepSeek Harness (dsh)** — the CLI + browser-web-UI **agent harness** — on an **Android** phone with **Termux**, **proot-distro**, and **Ubuntu**. Covers **Node.js/npm**, **dsh installation**, first-run configuration, the **environment skills**, and **Python dependencies**. Verified on **Ubuntu 26.04 LTS "Resolute Raccoon" (aarch64) under PRoot** — no root required.
 
-[DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) is an agent harness (a CLI + browser UI) that boots a *profile* — an ordered stack of plugin layers — to run an LLM agent with tools. This repository documents how to get it running on a phone with Termux + proot-distro, and how to install the companion environment skills from [`duke5am/skills-for-proot-distro-ubuntu`](https://github.com/duke5am/skills-for-proot-distro-ubuntu).
+[DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) is an open-source **agent harness** (a CLI + browser **web UI**) that boots a *profile* — an ordered stack of plugin layers — to run an **LLM agent** with tools. This repository is a step-by-step **tutorial** for running it on an **Android** phone with **Termux** + **proot-distro** (Ubuntu under PRoot, no root), plus the companion environment skills from [`duke5am/skills-for-proot-distro-ubuntu`](https://github.com/duke5am/skills-for-proot-distro-ubuntu).
+
+## Quick start (TL;DR)
+
+The entire setup, condensed to two copy-paste blocks:
+
+```bash
+# --- 1. In Termux ---
+pkg update && pkg upgrade
+pkg install proot-distro
+proot-distro install ubuntu
+proot-distro login ubuntu
+```
+
+```bash
+# --- 2. Inside Ubuntu (as root) ---
+apt update && apt install -y curl git
+curl -fsSL https://deb.nodesource.com/setup_22.x -o /tmp/setup_node.sh && bash /tmp/setup_node.sh
+apt install -y nodejs
+npm install -g @deepseek-ai/dsh
+git clone --depth 1 https://github.com/duke5am/skills-for-proot-distro-ubuntu.git /tmp/dsh-skills && cp -r /tmp/dsh-skills/{package-installation,python-usage,shell-usage,writing-skills} ~/.dsh/skills/ && rm -rf /tmp/dsh-skills
+dsh web   # browser UI at http://127.0.0.1:3080
+```
+
+Read on for the detailed walkthrough (configuration, Python dependencies, and troubleshooting).
+
+## What's inside
+
+- `README.md` — this step-by-step setup guide
+- `setup.sh` — automates steps 4–7 (dsh install, skills clone, core apt packages)
+- `requirements.txt` — a full `pip3 freeze` snapshot of the verified Python environment
+- `LICENSE` — MIT
 
 ## Verified environment
 
